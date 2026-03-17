@@ -140,7 +140,7 @@ public class FocusTimeActivity extends AppCompatActivity {
             h.btnDelete.setOnClickListener(v ->
                     new AlertDialog.Builder(FocusTimeActivity.this)
                         .setTitle("Delete Range")
-                        .setMessage("Delete "" + r.label + ""?")
+                       .setMessage("Delete: " + r.label)
                         .setPositiveButton("Delete", (d, w) -> { ranges.remove(pos); save(); })
                         .setNegativeButton("Cancel", null).show());
         }
