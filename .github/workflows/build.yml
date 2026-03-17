@@ -35,6 +35,16 @@ jobs:
           curl -sL "https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar" \
             -o gradle/wrapper/gradle-wrapper.jar
 
+      - name: Fix unicode characters in Java files
+        run: |
+          find app/src -name "*.java" | xargs sed -i \
+            -e 's/\u201c/\\"/g' \
+            -e 's/\u201d/\\"/g' \
+            -e 's/\u2018/'"'"'/g' \
+            -e 's/\u2019/'"'"'/g' \
+            -e 's/\u2013/-/g' \
+            -e 's/\u2014/-/g'
+
       - name: Verify Gradle version
         run: gradle --version
 
