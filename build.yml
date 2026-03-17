@@ -35,6 +35,31 @@ jobs:
           curl -sL "https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar" \
             -o gradle/wrapper/gradle-wrapper.jar
 
+      - name: Fix unicode characters in Java files
+        run: |
+          python3 - <<'EOF'
+          import os, glob
+          replacements = {
+              '\u201c': '\\"',
+              '\u201d': '\\"',
+              '\u2018': "'",
+              '\u2019': "'",
+              '\u2013': '-',
+              '\u2014': '-',
+          }
+          for path in glob.glob('app/src/**/*.java', recursive=True):
+              with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                  content = f.read()
+              new_content = content
+              for bad, good in replacements.items():
+                  new_content = new_content.replace(bad, good)
+              if new_content != content:
+                  with open(path, 'w', encoding='utf-8') as f:
+                      f.write(new_content)
+                  print(f"Fixed: {path}")
+          print("Unicode fix complete")
+          EOF
+
       - name: Verify Gradle version
         run: gradle --version
 
